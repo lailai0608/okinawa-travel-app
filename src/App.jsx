@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Sun, Calendar, Info, CreditCard } from 'lucide-react';
+import { MapPin, Sun, Calendar, Info, CreditCard, Navigation } from 'lucide-react';
 
 const TravelApp = () => {
   const [activeTab, setActiveTab] = useState('itinerary');
@@ -35,27 +35,74 @@ const TravelApp = () => {
     <div className="max-w-md mx-auto bg-slate-50 min-h-screen pb-24 font-sans shadow-lg relative text-slate-800">
       <header className="bg-white p-6 border-b border-slate-100 sticky top-0 z-50">
         <h1 className="text-2xl font-black text-blue-600 tracking-tighter">沖繩冬日旅 12.26</h1>
-        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">不開車自由行小助手</p>
+        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 italic">Personal Travel Assistant</p>
       </header>
 
       {activeTab === 'itinerary' ? (
         <div className="p-4 space-y-8 mt-2">
           {itinerary.map((day, idx) => (
             <div key={idx} className="space-y-4">
-              <div className="flex items-center gap-2 bg-blue-600 text-white w-fit px-4 py-1.5 rounded-full shadow-md">
+              <div className="flex items-center gap-2 bg-blue-600 text-white w-fit px-4 py-1.5 rounded-full shadow-md transition-all">
                 <Calendar size={14} />
                 <span className="text-xs font-bold tracking-wide">{day.date}</span>
               </div>
               
               {day.items.map((item, i) => (
-                <div key={i} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm transition-transform active:scale-95">
+                <div key={i} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-[10px] bg-slate-100 text-slate-500 px-2.5 py-1 rounded-lg font-mono font-bold tracking-wider">{item.time}</span>
+                    <span className="text-[10px] bg-slate-100 text-slate-500 px-2.5 py-1 rounded-lg font-mono font-bold">{item.time}</span>
                     {item.tag && (
-                      <span className="text-[10px] bg-orange-100 text-orange-600 px-3 py-1 rounded-full font-black tracking-tight">
+                      <span className="text-[10px] bg-orange-100 text-orange-600 px-3 py-1 rounded-full font-black">
                         {item.tag}
                       </span>
                     )}
                   </div>
                   
-                  <div className="flex gap-4 items-
+                  <div className="flex gap-4 items-start">
+                    <span className="text-3xl">{item.type}</span>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-slate-800 text-base leading-snug">{item.title}</h3>
+                      <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed font-medium">{item.note}</p>
+                      
+                      <button 
+                        onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.nav)}`)}
+                        className="mt-4 flex items-center justify-center gap-2 bg-slate-900 text-white text-[11px] py-3 px-4 rounded-2xl font-bold w-full active:scale-95 transition-all shadow-lg shadow-slate-200"
+                      >
+                        <Navigation size={14} /> 開啟導航
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="p-8 space-y-6">
+          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <h2 className="font-bold text-slate-800 flex items-center gap-2 mb-4">
+              <Info size={18} className="text-blue-500" /> 緊急聯絡資訊
+            </h2>
+            <div className="space-y-2 text-sm text-slate-600 font-medium">
+              <p className="flex justify-between border-b border-slate-50 pb-2"><span>🚑 救護車/火警</span><span className="text-red-500 font-bold">119</span></p>
+              <p className="flex justify-between pt-2"><span>👮 警察局</span><span className="text-blue-500 font-bold">110</span></p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/90 backdrop-blur-xl border-t border-slate-100 flex justify-around py-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+        <button onClick={() => setActiveTab('itinerary')} className={`flex flex-col items-center ${activeTab === 'itinerary' ? 'text-blue-600' : 'text-slate-300'}`}>
+          <Calendar size={20} />
+          <span className="text-[9px] font-black mt-1.5 uppercase tracking-wider">行程</span>
+        </button>
+        <button onClick={() => setActiveTab('tools')} className={`flex flex-col items-center ${activeTab === 'tools' ? 'text-blue-600' : 'text-slate-300'}`}>
+          <CreditCard size={20} />
+          <span className="text-[9px] font-black mt-1.5 uppercase tracking-wider">工具</span>
+        </button>
+      </nav>
+    </div>
+  );
+};
+
+export default TravelApp;
